@@ -5,18 +5,30 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "section_break_gjy2"
+  "section_break_gjy2",
+  "amended_from"
  ],
  "fields": [
   {
    "fieldname": "section_break_gjy2",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Job Card",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2026-02-24 20:08:49.873582",
+ "modified": "2026-02-25 11:27:15.766454",
  "modified_by": "Administrator",
  "module": "Quickfix",
  "name": "Job Card",

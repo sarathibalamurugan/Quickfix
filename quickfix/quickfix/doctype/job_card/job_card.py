@@ -14,6 +14,7 @@ class JobCard(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
+		amended_from: DF.Link | None
 	# end: auto-generated types
 
 	pass

@@ -15,6 +15,7 @@ class ServiceInvoice(Document):
 		from frappe.types import DF
 
 		amended_from: DF.Link | None
+		name1: DF.Data | None
 	# end: auto-generated types
 
 	pass
