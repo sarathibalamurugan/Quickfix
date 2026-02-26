@@ -1,0 +1,29 @@
+[
+ {
+  "average_repair_hours": 0,
+  "description": "",
+  "device_type": "Smartphone",
+  "docstatus": 0,
+  "doctype": "Device Type",
+  "modified": "2026-02-26 18:04:56.892358",
+  "name": "Smartphone"
+ },
+ {
+  "average_repair_hours": 0,
+  "description": "",
+  "device_type": "Laptop",
+  "docstatus": 0,
+  "doctype": "Device Type",
+  "modified": "2026-02-26 18:04:50.503999",
+  "name": "Laptop"
+ },
+ {
+  "average_repair_hours": 0,
+  "description": "",
+  "device_type": "Tablet",
+  "docstatus": 0,
+  "doctype": "Device Type",
+  "modified": "2026-02-26 18:05:03.278414",
+  "name": "Tablet"
+ }
+]

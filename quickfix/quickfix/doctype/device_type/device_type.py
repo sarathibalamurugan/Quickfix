@@ -14,6 +14,9 @@ class DeviceType(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
+		average_repair_hours: DF.Int
+		description: DF.SmallText | None
+		device_type: DF.Data
 	# end: auto-generated types
 
 	pass

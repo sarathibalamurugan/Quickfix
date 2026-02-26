@@ -1,7 +1,7 @@
 # Copyright (c) 2026, Parthsarathi and contributors
 # For license information, please see license.txt
 
-# import frappe
+import frappe
 from frappe.model.document import Document
 
 
@@ -16,5 +16,3 @@ class JobCard(Document):
 
 		amended_from: DF.Link | None
 	# end: auto-generated types
-
-	pass
