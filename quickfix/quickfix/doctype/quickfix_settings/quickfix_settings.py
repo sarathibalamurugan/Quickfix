@@ -14,6 +14,10 @@ class QuickFixSettings(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
+		default_labour_charge: DF.Currency
+		low_stock_alert_enabled: DF.Check
+		manager_email: DF.Data
+		shop_name: DF.Data | None
 	# end: auto-generated types
 
 	pass

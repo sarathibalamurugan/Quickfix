@@ -2,5 +2,7 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Service Invoice", {
-	refresh(frm) {},
+	refresh(frm) {
+		frm.set_value("invoice_date", frappe.datetime.get_today());
+	},
 });

@@ -17,6 +17,11 @@ class PartUsageEntry(Document):
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data
+		part: DF.Link
+		part_name: DF.Data | None
+		quantity: DF.Float
+		total_price: DF.Currency
+		unit_price: DF.Currency
 	# end: auto-generated types
 
 	pass

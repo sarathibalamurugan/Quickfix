@@ -15,7 +15,13 @@ class ServiceInvoice(Document):
 		from frappe.types import DF
 
 		amended_from: DF.Link | None
-		name1: DF.Data | None
+		customer_name: DF.Data | None
+		invoice_date: DF.Date | None
+		job_card: DF.Link
+		labour_charge: DF.Currency
+		parts_total: DF.Currency
+		payment_status: DF.Literal["Unpaid", "Paid"]
+		total_amount: DF.Currency
 	# end: auto-generated types
 
 	pass
