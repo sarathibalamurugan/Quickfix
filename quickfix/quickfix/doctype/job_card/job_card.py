@@ -47,3 +47,21 @@ class JobCard(Document):
 			"Cancelled",
 		]
 	# end: auto-generated types
+
+
+@frappe.whitelist()
+def share_job_card(job_card_name, user_email):
+	frappe.share.add("Job Card", job_card_name, user_email, read=1)
+
+
+def get_permission_query_conditions(user=None):
+	if not user:
+		user = frappe.session.user
+	if user == "Administrator":
+		return None
+
+	if "QF Technician" in frappe.get_roles(user):
+		technician = frappe.get_value("Technician", {"user": user}, "name")
+		if technician:
+			return f"`tabJob Card`.`assigned_technician` = {frappe.db.escape(technician)}"
+	return None
