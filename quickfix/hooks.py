@@ -253,4 +253,12 @@ require_type_annotated_api_methods = True
 # List of apps whose translatable strings should be excluded from this app's translations.
 # ignore_translatable_strings_from = []
 
-fixtures = [{"doctype": "Device Type"}]
+fixtures = [
+	{"doctype": "Role", "filters": [["name", "in", ["QF Technician", "QF Service Staff", "QF Manager"]]]},
+	{
+		"doctype": "Custom DocPerm",
+		"filters": [
+			["parent", "in", ["Device Type", "Technician", "Spare Part", "Job Card", "Service Invoice "]]
+		],
+	},
+]
