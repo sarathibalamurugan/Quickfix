@@ -36,4 +36,6 @@
  'export': 1,
  'share': 1}
 
-### j
+### D2
+-  frappe.get_all will return all the records that the session user dont have access to read. but frappe.get-list will return only the user have access to read with using permission_query_conditions.
+

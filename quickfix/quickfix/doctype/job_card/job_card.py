@@ -46,12 +46,88 @@ class JobCard(Document):
 			"Delivered",
 			"Cancelled",
 		]
+
 	# end: auto-generated types
+	def validate(self):
+		self.validate_customer_phone()
+		self.validate_technician()
+		self.validate_price()
+
+	def before_submit(self):
+		msg = ""
+		if self.status != "Ready for Delivery":
+			frappe.throw("Job Card can only be submitted when status is 'Ready for Delivery'.")
+		for part in self.parts_used:
+			part_qty = frappe.get_value("Spare Part", part.part, "stock_qty")
+			if part.quantity > part_qty:
+				msg += f"Not enough stock for Spare Part {part.part}. Available: {part_qty}. \n "
+
+		if msg:
+			frappe.throw(msg)
+
+	def on_submit(self):
+		for part in self.parts_used:
+			frappe.db.set_value(
+				"Spare Part",
+				part.part,
+				"stock_qty",
+				frappe.get_value("Spare Part", part.part, "stock_qty") - part.quantity,
+			)
+			# frappe.db.set_value("Spare Part", part.part, "stock_qty", part_qty - part.quantity) is not triggered by the user. Its a System triggered action thats why. But I still didn't understand why we need to use Ignore permissions here. Because the frappe.db automatically update in DB by bypassing permissions. And cant use Ignore Permissions in this version of frappe.
+
+		frappe.get_doc(
+			{
+				"doctype": "Service Invoice",
+				"job_card": self.name,
+				"labour_charge": self.labour_charge,
+				"parts_total": self.parts_total,
+				"total_amount": self.final_amount,
+			}
+		).insert(ignore_permissions=True)
+
+		frappe.publish_realtime(
+			"job_ready",
+			{"job_card": self.name, "status": self.status, "msg": "Job Card is ready for delivery"},
+			user=self.owner,
+		)
+
+		frappe.enqueue(
+			"quickfix.quickfix.doctype.job_card.job_card.send_notification", queue="short", job_card=self.name
+		)
+
+	def validate_customer_phone(self):
+		if self.customer_phone and self.customer_phone.isdigit() and len(self.customer_phone) == 10:
+			return
+		else:
+			frappe.throw("Invalid Customer Phone. It should be a 10-digit number.")
+
+	def validate_technician(self):
+		if (
+			self.status in ["In Repair", "Ready for Delivery", "Delivered", "Cancelled"]
+			and not self.assigned_technician
+		):
+			frappe.throw("Technician assignment is required for this status.")
+
+	def validate_price(self):
+		self.parts_total = 0
+		self.final_amount = 0
+		for part in self.parts_used:
+			part.total_price = part.quantity * part.unit_price
+			self.parts_total += part.total_price
+		self.final_amount = self.parts_total + self.labour_charge
 
 
 @frappe.whitelist()
 def share_job_card(job_card_name, user_email):
 	frappe.share.add("Job Card", job_card_name, user_email, read=1)
+
+
+@frappe.whitelist()
+def safe_and_unsafe():
+	unsafe = frappe.get_all("Job Card", filters={"docstatus": 1}, fields=["name", "customer_name"])
+	print("Unsafe Job Cards:", unsafe)
+	safe = frappe.get_list("Job Card", filters={"docstatus": 1}, fields=["name", "customer_name"])
+	print("Safe Job Cards:", safe)
 
 
 def get_permission_query_conditions(user=None):
@@ -65,3 +141,13 @@ def get_permission_query_conditions(user=None):
 		if technician:
 			return f"`tabJob Card`.`assigned_technician` = {frappe.db.escape(technician)}"
 	return None
+
+
+def send_notification(job_card):
+	job_card = frappe.get_doc("Job Card", job_card)
+	frappe.sendmail(
+		recipients=job_card.customer_email,
+		subject=f"Your device is ready for delivery - Job Card {job_card.name}",
+		message=f"Dear {job_card.customer_name},<br><br>Your device with Job Card {job_card.name} is ready for delivery.<br><br>Thank you<br><br>Best regards,<br>QuickFix Team",
+		now=True,
+	)

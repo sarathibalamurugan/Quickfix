@@ -24,4 +24,17 @@ class ServiceInvoice(Document):
 		total_amount: DF.Currency
 	# end: auto-generated types
 
-	pass
+
+def get_permission_query_conditions(user=None):
+	if not user:
+		user = frappe.session.user
+	if (user == "Administrator") or ("QF Manager" in frappe.get_roles(user)):
+		return None
+	else:
+		return "`tabService Invoice`.`job_card` IN (SELECT name FROM `tabJob Card` WHERE payment_status = 'Paid')"
+
+	# if "QF Technician" in frappe.get_roles(user):
+	# 	technician = frappe.get_value("Technician", {"user": user}, "name")
+	# 	if technician:
+	# 		return f"`tabJob Card`.`assigned_technician` = {frappe.db.escape(technician)}"
+	# return None

@@ -122,6 +122,7 @@ app_license = "mit"
 
 permission_query_conditions = {
 	"Job Card": "quickfix.quickfix.doctype.job_card.job_card.get_permission_query_conditions",
+	"Service Invoice": "quickfix.quickfix.doctype.service_invoice.service_invoice.get_permission_query_conditions",
 }
 #
 # has_permission = {
