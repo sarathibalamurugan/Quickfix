@@ -93,12 +93,12 @@ class JobCard(Document):
 		)
 
 		frappe.enqueue(
-			"quickfix.quickfix.doctype.job_card.job_card.send_notification", queue="short", job_card=self.name
+			"quickfix.service_center.doctype.job_card.job_card.send_notification",
+			queue="short",
+			job_card=self.name,
 		)
 
 	def on_cancel(self):
-		self.status = "Cancelled"
-
 		for part in self.parts_used:
 			frappe.db.set_value(
 				"Spare Part",
@@ -107,8 +107,11 @@ class JobCard(Document):
 				frappe.get_value("Spare Part", part.part, "stock_qty") + part.quantity,
 			)
 		doc = frappe.get_doc("Service Invoice", ({"job_card": self.name}))
-		if doc:
+		if doc.docstatus == 1:
 			doc.cancel()
+		elif doc.docstatus == 0:
+			doc.delete()
+		self.status = "Cancelled"
 
 	def on_trash(self):
 		if self.status != "Draft" and self.status != "Cancelled":
