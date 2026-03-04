@@ -1,11 +1,11 @@
 # Copyright (c) 2026, Parthsarathi and contributors
 # For license information, please see license.txt
 
-import frappe
+# import frappe
 from frappe.model.document import Document
 
 
-class SparePart(Document):
+class PartUsageEntry(Document):
 	# begin: auto-generated types
 	# This code is auto-generated. Do not modify anything in this block.
 
@@ -14,14 +14,14 @@ class SparePart(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		compatible_device_type: DF.Link | None
-		is_active: DF.Check
-		part_code: DF.Data | None
-		part_name: DF.Data
-		reorder_level: DF.Float
-		selling_price: DF.Currency
-		stock_qty: DF.Float
-		unit_cost: DF.Currency
+		parent: DF.Data
+		parentfield: DF.Data
+		parenttype: DF.Data
+		part: DF.Link
+		part_name: DF.Data | None
+		quantity: DF.Float
+		total_price: DF.Currency
+		unit_price: DF.Currency
 	# end: auto-generated types
 
 	pass

@@ -39,3 +39,10 @@
 ### D2
 -  frappe.get_all will return all the records that the session user dont have access to read. but frappe.get-list will return only the user have access to read with using permission_query_conditions.
 
+### E1 - Complete Job Card Lifecycle
+- on_update() - calling self.safe() gave "maximum recursion depth exceeded" error. because while updating if we call self.safe() it will the on_update function again and again. Thats why we are encountering this error.
+
+### E2 - autoname & Renaming
+- frappe.rename_doc renamed the technician and all other doctyoe fileds linked to that particular technician's new name. the function calls the rename_doc.py function from the model, where they handled all validates and linked docs.
+- merge=False can prevent combining 2 docs having the same name as single doc. if we write merge=True the old doc will be deleted and the another doc with the same name is referenced in all linked docs.
+

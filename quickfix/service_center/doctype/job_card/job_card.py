@@ -46,6 +46,7 @@ class JobCard(Document):
 			"Delivered",
 			"Cancelled",
 		]
+	# end: auto-generated types
 
 	# end: auto-generated types
 	def validate(self):

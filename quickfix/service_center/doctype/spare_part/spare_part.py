@@ -24,4 +24,11 @@ class SparePart(Document):
 		unit_cost: DF.Currency
 	# end: auto-generated types
 
-	pass
+	def validate(self):
+		self.autoname()
+		if self.selling_price < self.unit_cost:
+			frappe.throw("Selling Price must be greater than Unit Cost")
+
+	def autoname(self):
+		if self.part_code:
+			self.part_code = self.part_code.upper()
