@@ -180,9 +180,7 @@ doc_events = {
 # Overriding Methods
 # ------------------------------
 #
-# override_whitelisted_methods = {
-# 	"frappe.desk.doctype.event.event.get_events": "quickfix.event.get_events"
-# }
+override_whitelisted_methods = {"frappe.client.get_count": "quickfix.api.custom_get_count"}
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
@@ -257,13 +255,12 @@ require_type_annotated_api_methods = True
 # ignore_translatable_strings_from = []
 
 fixtures = [
-	{"doctype": "Role", "filters": [["name", "in", ["QF Technician", "QF Service Staff", "QF Manager"]]]},
-	{
-		"doctype": "Custom DocPerm",
-		"filters": [
-			["parent", "in", ["Device Type", "Technician", "Spare Part", "Job Card", "Service Invoice "]]
-		],
-	},
+	{"doctype": "Custom Field"},
+	{"doctype": "Property Setter"},
+	{"doctype": "Role", "filters": [["name", "in", ["QuickFix Manager"]]]},
+	{"doctype": "Workspace", "filters": [["module", "=", "Service Center"]]},
+	{"doctype": "Device Type", "filters": [["name", "in", ["Laptop", "Mobile", "Tablet"]]]},
+	{"doctype": "QuickFix Settings"},
 ]
 
 extend_bootinfo = "quickfix.boot.extend_bootinfo"

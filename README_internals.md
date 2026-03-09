@@ -67,4 +67,10 @@ Asset hooks
 Jinja hooks:
 - Jinja context available in Print Formats can automatically fetch the document and its object. but in web pages, the jinja templates are manually configured.
 
+### F4 - override_whitelisted_methods Hook
+- override_whitelisted_methods is used in the hooks and it is reversible and visible used to override whitelist methods whithout touching the file. but monkey patching is something we use at import time , the value is changed at the import time. but cant find out where its used and when used.
+-If TWO apps both register override_whitelisted_methods for the same
+method only one will win which is the last one based on the of the two apps loaded. the last one  wins.
+- When the whitelisted method recieves more number of arguments than it has. or missing something it has, or wrong parameter names leads to the TypeError.
+
 
