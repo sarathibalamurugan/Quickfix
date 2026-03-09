@@ -2,6 +2,7 @@
 # For license information, please see license.txt
 
 import frappe
+from frappe import _
 from frappe.model.document import Document
 
 
@@ -57,14 +58,14 @@ class JobCard(Document):
 	def before_submit(self):
 		msg = ""
 		if self.status != "Ready for Delivery":
-			frappe.throw("Job Card can only be submitted when status is 'Ready for Delivery'.")
+			frappe.throw(_("Job Card can only be submitted when status is 'Ready for Delivery'."))
 		for part in self.parts_used:
 			part_qty = frappe.get_value("Spare Part", part.part, "stock_qty")
 			if part.quantity > part_qty:
 				msg += f"Not enough stock for Spare Part {part.part}. Available: {part_qty}. \n "
 
 		if msg:
-			frappe.throw(msg)
+			frappe.throw(_(msg))
 
 	def on_submit(self):
 		for part in self.parts_used:
@@ -111,11 +112,11 @@ class JobCard(Document):
 			doc.cancel()
 		elif doc.docstatus == 0:
 			doc.delete()
-		self.status = "Cancelled"
+		frappe.db.set_value("Job Card", self.name, "status", "Cancelled")
 
 	def on_trash(self):
 		if self.status != "Draft" and self.status != "Cancelled":
-			frappe.throw("Only Job Cards in Draft or Cancelled status can be deleted.")
+			frappe.throw(_("Only Job Cards in Draft or Cancelled status can be deleted."))
 
 	def on_update(self):
 		pass
@@ -124,14 +125,14 @@ class JobCard(Document):
 		if self.customer_phone and self.customer_phone.isdigit() and len(self.customer_phone) == 10:
 			return
 		else:
-			frappe.throw("Invalid Customer Phone. It should be a 10-digit number.")
+			frappe.throw(_("Invalid Customer Phone. It should be a 10-digit number."))
 
 	def validate_technician(self):
 		if (
 			self.status in ["In Repair", "Ready for Delivery", "Delivered", "Cancelled"]
 			and not self.assigned_technician
 		):
-			frappe.throw("Technician assignment is required for this status.")
+			frappe.throw(_("Technician assignment is required for this status."))
 
 	def validate_price(self):
 		self.parts_total = 0

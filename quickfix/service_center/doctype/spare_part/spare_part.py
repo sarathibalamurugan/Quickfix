@@ -1,6 +1,8 @@
 # Copyright (c) 2026, Parthsarathi and contributors
 # For license information, please see license.txt
 
+from pydoc import doc
+
 import frappe
 from frappe.model.document import Document
 

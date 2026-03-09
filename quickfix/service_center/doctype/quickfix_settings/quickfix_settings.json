@@ -8,7 +8,8 @@
   "shop_name",
   "manager_email",
   "default_labour_charge",
-  "low_stock_alert_enabled"
+  "low_stock_alert_enabled",
+  "low_stock_threshold"
  ],
  "fields": [
   {
@@ -34,13 +35,19 @@
    "fieldname": "low_stock_alert_enabled",
    "fieldtype": "Check",
    "label": "Low stock Alert Enabled"
+  },
+  {
+   "default": "5",
+   "fieldname": "low_stock_threshold",
+   "fieldtype": "Float",
+   "label": "Low Stock Threshold"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-03-04 11:38:07.811749",
+ "modified": "2026-03-09 15:56:06.097239",
  "modified_by": "Administrator",
  "module": "Service Center",
  "name": "QuickFix Settings",

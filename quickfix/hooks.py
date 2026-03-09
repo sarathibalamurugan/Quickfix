@@ -26,7 +26,7 @@ app_license = "mit"
 
 # include js, css files in header of desk.html
 # app_include_css = "/assets/quickfix/css/quickfix.css"
-# app_include_js = "/assets/quickfix/js/quickfix.js"
+app_include_js = "quickfix.bundle.js"
 
 # include js, css files in header of web template
 # web_include_css = "/assets/quickfix/css/quickfix.css"
@@ -77,21 +77,18 @@ app_license = "mit"
 # ----------
 
 # add methods and filters to jinja environment
-# jinja = {
-# 	"methods": "quickfix.utils.jinja_methods",
-# 	"filters": "quickfix.utils.jinja_filters"
-# }
+jinja = {"methods": "quickfix.jinja_methods.get_shop_name", "filters": "quickfix.jinja_methods.format_job_id"}
 
 # Installation
 # ------------
 
 # before_install = "quickfix.install.before_install"
-# after_install = "quickfix.install.after_install"
+after_install = "quickfix.install.after_install"
 
 # Uninstallation
 # ------------
 
-# before_uninstall = "quickfix.uninstall.before_uninstall"
+before_uninstall = "quickfix.uninstall.before_uninstall"
 # after_uninstall = "quickfix.uninstall.after_uninstall"
 
 # Integration Setup
@@ -124,6 +121,10 @@ permission_query_conditions = {
 	"Job Card": "quickfix.service_center.doctype.job_card.job_card.get_permission_query_conditions",
 	"Service Invoice": "quickfix.service_center.doctype.service_invoice.service_invoice.get_permission_query_conditions",
 }
+
+# Override doctype class
+override_doctype_class = {"Job Card": "quickfix.overrides.custome_job_card.CustomJobCard"}
+
 #
 # has_permission = {
 # 	"Event": "frappe.desk.doctype.event.event.has_permission",
@@ -133,13 +134,14 @@ permission_query_conditions = {
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+	"*": {
+		"on_update": "quickfix.utils.global_doc_event_handler.global_doc_event_handler",
+		"on_submit": "quickfix.utils.global_doc_event_handler.global_doc_event_handler",
+		"on_cancel": "quickfix.utils.global_doc_event_handler.global_doc_event_handler",
+		"on_trash": "quickfix.utils.global_doc_event_handler.global_doc_event_handler",
+	},
+}
 
 # Scheduled Tasks
 # ---------------
@@ -262,4 +264,15 @@ fixtures = [
 			["parent", "in", ["Device Type", "Technician", "Spare Part", "Job Card", "Service Invoice "]]
 		],
 	},
+]
+
+extend_bootinfo = "quickfix.boot.extend_bootinfo"
+
+on_session_creation = "quickfix.utils.global_doc_event_handler.log_login"
+on_logout = "quickfix.utils.global_doc_event_handler.log_logout"
+
+website_route_rules = [{"from_route": "/track-job", "to_route": "track-job"}]
+
+portal_menu_items = [
+	{"title": "Track My Job", "route": "/track-job", "reference_doctype": "Job Card", "role": "Guest"}
 ]

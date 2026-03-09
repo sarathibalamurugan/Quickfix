@@ -46,3 +46,25 @@
 - frappe.rename_doc renamed the technician and all other doctyoe fileds linked to that particular technician's new name. the function calls the rename_doc.py function from the model, where they handled all validates and linked docs.
 - merge=False can prevent combining 2 docs having the same name as single doc. if we write merge=True the old doc will be deleted and the another doc with the same name is referenced in all linked docs.
 
+### E3 -  Standard Controller Pattern & override_doctype_class
+Part-B
+- override_doctype_class can change the core logic if we mentions and validates it. but doc_events run only when the event triggers.
+
+Part-C
+- I would choose frappe.db.get_value because for Quickfix Setting Doctype no one have any permission to read. If any validation or controller uses Quickfix Settings field value . they cant access unless using frappe.db.get_value.
+
+### F1 - doc_events: Wildcard, Multiple Handlers, Order
+Part-B  Multiple handler conflict:
+- First it went for the override doctype class by super.validate() and goes straight to the main controller. the first one runs is controller. I pointed the same validate function in the doc_events too. but the controller validate runs first.
+- when you register "*" AND a specific DocType handler for the same event both register run successfully. but if the register have frappe.throw, the first one will run then stops running after throwing error. then the second one fails to run.
+
+### F3 - Asset, Jinja & Website Hooks
+Asset hooks
+- app_include_js is used when the app documents needs extra features . it's like overriding js file only for the desk apps. and the web_include_js is used to load js files for public website from the app.
+- Doctype like Chart Of Accounts use tree view because of the need of hierarchical view. will make you understand of the parent and child level doctypes and docs.
+- build cache-busting: is nothing but it used to update the browser cached files to the latest files. It will give you the latest version of the UI instead of cached one.
+
+Jinja hooks:
+- Jinja context available in Print Formats can automatically fetch the document and its object. but in web pages, the jinja templates are manually configured.
+
+

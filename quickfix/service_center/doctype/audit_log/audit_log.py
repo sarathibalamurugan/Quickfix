@@ -5,7 +5,7 @@
 from frappe.model.document import Document
 
 
-class QuickFixSettings(Document):
+class AuditLog(Document):
 	# begin: auto-generated types
 	# This code is auto-generated. Do not modify anything in this block.
 
@@ -14,11 +14,11 @@ class QuickFixSettings(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		default_labour_charge: DF.Currency
-		low_stock_alert_enabled: DF.Check
-		low_stock_threshold: DF.Float
-		manager_email: DF.Data
-		shop_name: DF.Data | None
+		action: DF.Data | None
+		doctype_name: DF.Link | None
+		document_name: DF.Data | None
+		timestamp: DF.Datetime | None
+		user: DF.Link | None
 	# end: auto-generated types
 
 	pass
