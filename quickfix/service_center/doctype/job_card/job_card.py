@@ -15,7 +15,7 @@ class JobCard(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		from quickfix.quickfix.doctype.part_usage_entry.part_usage_entry import PartUsageEntry
+		from quickfix.service_center.doctype.part_usage_entry.part_usage_entry import PartUsageEntry
 
 		amended_from: DF.Link | None
 		assigned_technician: DF.Link | None
@@ -177,3 +177,23 @@ def send_notification(job_card):
 		message=f"Dear {job_card.customer_name},<br><br>Your device with Job Card {job_card.name} is ready for delivery.<br><br>Thank you<br><br>Best regards,<br>QuickFix Team",
 		now=True,
 	)
+
+
+@frappe.whitelist()
+def transfer_technician(job_card_name, technician_name):
+	frappe.db.set_value("Job Card", job_card_name, "assigned_technician", technician_name)
+	technician = frappe.db.get_value("Job Card", job_card_name, "assigned_technician")
+	return technician
+
+
+@frappe.whitelist()
+def mark_as_delivered(job_card_name):
+	frappe.db.set_value("Job Card", job_card_name, "status", "Delivered")
+	return
+
+
+@frappe.whitelist()
+def mark_as_ready_for_delivery(job_card_name):
+	frappe.db.set_value("Job Card", job_card_name, "status", "Ready for Delivery")
+	frappe.db.set_value("Job Card", job_card_name, "docstatus", 1)
+	return

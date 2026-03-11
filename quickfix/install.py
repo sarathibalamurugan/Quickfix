@@ -1,7 +1,11 @@
 import frappe
+from frappe.custom.doctype.property_setter.property_setter import make_property_setter
+
+from quickfix.monkey_patches import apply_all
 
 
 def after_install():
+	apply_all()
 	# Default Device Types already created by fixtures
 	frappe.get_doc(
 		{
@@ -10,6 +14,9 @@ def after_install():
 			"manager_email": "manager@quickfix.com",
 		}
 	).insert(ignore_permissions=True)
+
+	make_property_setter("Job Card", "remarks", "bold", 1, "Check")
+
 	frappe.msgprint("Quickfix installed successfully and default settings created.")
 
 

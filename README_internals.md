@@ -72,5 +72,23 @@ Jinja hooks:
 -If TWO apps both register override_whitelisted_methods for the same
 method only one will win which is the last one based on the of the two apps loaded. the last one  wins.
 - When the whitelisted method recieves more number of arguments than it has. or missing something it has, or wrong parameter names leads to the TypeError.
+- if your Custom Field has the same fieldname as a field added by a future Frappe update patches may crash and migration may fail.
+- if Patch 1 creates a Custom Field and Patch 2 reads it, rollbacking may be dangerous, and re-runnnig become unsafe if they merged in single patch. if they are in separate patch , if one succeed and one fail. the failed one will be re-runned. if they are in single patch re-runnig can leads to duplication.
 
+### G1 - Safe Monkey Patch with Version Guard
+Analysis
+- _qf_patched guard for to prevent patching twice.
+- scattering them in __init__.py is dangerous because debugging it will more harder. and it is hard to track in init. but in monkey patch everything is in single place. but still risky.
+- doc_events first - then override_doctype_class - then override_whitelisted_methods - then monkey patch. This is the order because in each step the risk iis increased.
 
+### H1 - Job Card Form Script
+- Making a frappe.call inside the validate client event will not work because frappe.call is an asynchronous call and validate is synchnous. validate() finishes quickly and doesn't wait async calls. then the api will response later.
+- for async data fetches using refresh is complex. it will run everytime the doc is refreshed, load, save, submit. but in onload, it will run only once. so onload is better than refresh here.
+
+### H3 - List View & Tree View
+- Tree DocType is a hierarchy based structure for doctypes which enables is_tree . like parent-child level.
+- doctype_tree_js is like doctype_list_js but for tree structure. extra fields like parent_field, is_group are required for the tree js.
+
+### Client Script DocType vs Shipped JS
+- Client script doctype used to write js in a doctype and also override app js. client script only stores in the db not in the local or app. when migrating or reinstalling the client scripts will be gone. we have to export it. it can be used for any instant fix needs.
+- hiding the field just in UI using js will actually hide the data but in backend the data is still accessible. permission security pitfall can block the user if he doesn't have permission to read it in permission level and after he can't access it using api calls. 
