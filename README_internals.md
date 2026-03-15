@@ -92,3 +92,6 @@ Analysis
 ### Client Script DocType vs Shipped JS
 - Client script doctype used to write js in a doctype and also override app js. client script only stores in the db not in the local or app. when migrating or reinstalling the client scripts will be gone. we have to export it. it can be used for any instant fix needs.
 - hiding the field just in UI using js will actually hide the data but in backend the data is still accessible. permission security pitfall can block the user if he doesn't have permission to read it in permission level and after he can't access it using api calls. 
+
+### I1 - Query Report with SQL Safety
+-  f-string SQL is dangerous because it can be user to inject sql. if someone changed the f string value to like deleting records, It's highly risk. but using parameterized pattern the SQL all the values as data not the raw SQL. so the SQL is safe here.
