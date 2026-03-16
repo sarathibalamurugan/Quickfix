@@ -95,3 +95,12 @@ Analysis
 
 ### I1 - Query Report with SQL Safety
 -  f-string SQL is dangerous because it can be user to inject sql. if someone changed the f string value to like deleting records, It's highly risk. but using parameterized pattern the SQL all the values as data not the raw SQL. so the SQL is safe here.
+
+### I4 - Prepared Report
+ - real-time reports generates instantly when user hits run. but prepared reports runs and fetch all the data for the report in background. its useful when the data to executed is so large . real-time reports will take much time and the screen will be freez untill the data is generated.
+ - the user actually see the outdated report if
+ underlying data changes between report preparations . the user should manually re-prepare the report. Because the report reads from stored JSON output.
+
+ ### I5 - Report Builder & Custom Report
+ - Report builder is used when there is no custom calculations and no dynamic aggregation logic, No backend processing needed. Script report is used when you need JOINs across multiple DocTypes, need performance-optimized SQL, want dynamic columns and other server side customization. and report builder in a production site is a mistake when it will avoid validations and shows all fields to everyone. it can fetch all records where user dont have access to read.
+

@@ -7,7 +7,6 @@ def only_if_manager():
 
 @frappe.whitelist()
 def custom_get_count(doctype, filters=None, debug=False, cache=False):
-	# First log the request to Audit Log, then call original behaviour
 	frappe.get_doc(
 		{
 			"doctype": "Audit Log",
@@ -19,3 +18,15 @@ def custom_get_count(doctype, filters=None, debug=False, cache=False):
 	from frappe.client import get_count
 
 	return get_count(doctype, filters, debug, cache)
+
+
+@frappe.whitelist()
+def prepare_technician_performance(filters=None):
+	filters = frappe.parse_json(filters) if filters else {}
+	frappe.enqueue(
+		"frappe.core.doctype.prepared_report.prepared_report.make_prepared_report",
+		queue="long",
+		report_name="Technician Performance Report",
+		filters=filters,
+	)
+	return
