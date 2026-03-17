@@ -109,3 +109,11 @@ Analysis
 - Putting a frappe.get_all() call inside the Jinja template directly can access the database directly. the pdf fetching may be slowed. and it hard to debug or refactor. while Pre-compute in before_print() and attach to self, then reference in template as
 doc.precomputed_field. it is a safe way to access the database while printing or generating pdf. easy to debug , can write testcase, etc,.
 
+### J2 - Raw Print vs HTML to PDF
+- Raw printing sends printer control commands directly to the device. there is no HTMl rendering . sending only plain text and control codes. no complex layoout , no images. while in HTML PDF rendering , there is full html rendering. and support images, multi-languages, ect,. 
+-  - position: sticky
+    - display: flex (advanced flex behaviors)
+    - position: fixed (PDF engine may overlap content incorrectly)
+
+-  without doc.get_formatted() the currency value will shown like just integer. but with that it will the currency logo and in float value.
+
