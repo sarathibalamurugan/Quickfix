@@ -35,6 +35,7 @@ class JobCard(Document):
 		parts_total: DF.Currency
 		parts_used: DF.Table[PartUsageEntry]
 		payment_status: DF.Literal["Unpaid", "Paid"]
+		print_summary: DF.SmallText | None
 		priority: DF.Literal["Normal", "High", "Urgent"]
 		problem_description: DF.TextEditor
 		remarks: DF.SmallText | None
@@ -141,6 +142,9 @@ class JobCard(Document):
 			part.total_price = part.quantity * part.unit_price
 			self.parts_total += part.total_price
 		self.final_amount = self.parts_total + self.labour_charge
+
+	def before_print(self, settings=None):
+		self.print_summary = f"{self.customer_name} - {self.device_type} {self.device_brand}"
 
 
 @frappe.whitelist()

@@ -104,3 +104,8 @@ Analysis
  ### I5 - Report Builder & Custom Report
  - Report builder is used when there is no custom calculations and no dynamic aggregation logic, No backend processing needed. Script report is used when you need JOINs across multiple DocTypes, need performance-optimized SQL, want dynamic columns and other server side customization. and report builder in a production site is a mistake when it will avoid validations and shows all fields to everyone. it can fetch all records where user dont have access to read.
 
+### J1 - Jinja Print Format: Job Card Receipt
+- the language is identified and alterd during the print time. the language passed to the system language setting . the the wrap strings are converted to the specified language. based on the dictionary for translation frappe has. if any string not in the dictionary then it registers as previous lang.
+- Putting a frappe.get_all() call inside the Jinja template directly can access the database directly. the pdf fetching may be slowed. and it hard to debug or refactor. while Pre-compute in before_print() and attach to self, then reference in template as
+doc.precomputed_field. it is a safe way to access the database while printing or generating pdf. easy to debug , can write testcase, etc,.
+

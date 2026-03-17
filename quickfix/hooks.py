@@ -77,7 +77,10 @@ app_include_js = "quickfix.bundle.js"
 # ----------
 
 # add methods and filters to jinja environment
-jinja = {"methods": "quickfix.jinja_methods.get_shop_name", "filters": "quickfix.jinja_methods.format_job_id"}
+jinja = {
+	"methods": ["quickfix.jinja_methods.get_shop_name", "quickfix.jinja_methods.get_jobcard_qr"],
+	"filters": "quickfix.jinja_methods.format_job_id",
+}
 
 # Installation
 # ------------
