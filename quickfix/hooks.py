@@ -149,23 +149,22 @@ doc_events = {
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-# 	"all": [
-# 		"quickfix.tasks.all"
-# 	],
-# 	"daily": [
-# 		"quickfix.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"quickfix.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"quickfix.tasks.weekly"
-# 	],
-# 	"monthly": [
-# 		"quickfix.tasks.monthly"
-# 	],
-# }
+scheduler_events = {
+	# "all": [
+	# 	"quickfix.tasks.all"
+	# ],
+	"daily": ["quickfix.service_center.doctype.job_card.job_card.check_low_stock"],
+	# "hourly": [
+	# 	"quickfix.tasks.hourly"
+	# ],
+	# "weekly": [
+	# 	"quickfix.tasks.weekly"
+	# ],
+	# "monthly": [
+	# 	"quickfix.service_center.doctype.job_card.job_card.monthly_revenue_report"
+	# ],
+	"cron": {"0 2 1 * *": ["quickfix.service_center.doctype.job_card.job_card.monthly_revenue_report"]},
+}
 
 # Testing
 # -------

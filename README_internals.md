@@ -117,3 +117,32 @@ doc.precomputed_field. it is a safe way to access the database while printing or
 
 -  without doc.get_formatted() the currency value will shown like just integer. but with that it will the currency logo and in float value.
 
+### K1 - Background Jobs: Queues, Timeouts, Progress
+Task A - Queue names:
+- short - is for small background jobs like sending email, status changing. And it took small amount of time like 300s.
+- long - is for large task like data import, report genarating,and any bulk operations.
+- default - Its not fast and its not heavy. its for normal regular jobs.
+
+Task D - Job failure handling:
+- since I tested it , it fails only once and not rerunned.
+
+###  K2 - Scheduler Events & Cron
+- to disable scheduler for a specific site use command `bench --site site-name disable-sheduler`. dev site scheduler is disabled because the scheduled event may trigger any realtime workflow like sending emails, ect,.. to avoiding that kind of side effects. devs disabled it. for the controlled testing.
+- If the worker was down the scheduled job will stopped running untill the worker come alive. but the job should not died , if its expires then failed.
+
+### K3 - Performance Engineering 
+Task A - N+1 query detection and fix:
+```python
+  job_cards = frappe.get_all("Job Card", fields=["name","assigned_technician","assigned_technician.technician_name", "assigned_technician.phone"])
+    for jc in job_cards:
+      print(jc.technician_name, jc.phone)```
+```
+Task B - Bulk operations:
+- it took 0.01 secs to change the status into cancel. and i tried the bulk_insert it took 0.04 seconds to create and insert.
+
+Task C - Indexing:
+- 1. primay
+  2. creation
+  3. amended_from_index
+  4. status_index
+- you would NOT add a search index to every field. because, they improve reads. but slow down writes. while updating, deleting, inserting anything everytime a tree will be created and slows down.
