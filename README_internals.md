@@ -308,3 +308,17 @@ Task D - Rate limiting & abuse protection:
 Task B - Incoming Webhook Endpoint:
 - == searches in expected time interval, so attackers can analyze the time duration and can find the correct hmac. to overcome this hmac.compare_digest is used . it uses constant time interval where attacker cant guess the timing.
 - If a duplicate payment is sent the audit log is checked for duplication . if duplicate found logic stops.
+
+### M1 - Server Script DocType
+- modules like os, sys, subprocess are blocked in server script.
+- you cannot run background job, build complex integration(external APIs), import modules.
+- in small internal APIs, lightweight logics server script is accessible.
+- you should use app code in webhooks, payments, billing, inventory update.
+- the logics are stored in DB not in repo. cant track the code. no unit-tests.
+
+### M2 - Caching, Redis & Cache Invalidation
+- frappe.cache.get_value("bootinfo") - it contains all of the data the ui needs to login. 
+- frappe.cache.get_value("quickfix:translations") - it wont work . but frappe.cache.get_keys("*translation*") - returns [b'_821d9f092809d769|merged_translations',
+ b'_821d9f092809d769|lang_user_translations']
+- frappe.clear_cache() - the browser will reload everything. because all metadata, caches were cleared.
+
