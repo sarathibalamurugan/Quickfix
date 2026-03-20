@@ -19,6 +19,7 @@ class QuickFixSettings(Document):
 		low_stock_threshold: DF.Float
 		manager_email: DF.Data
 		shop_name: DF.Data | None
+		webhook_url: DF.Data | None
 	# end: auto-generated types
 
 	pass

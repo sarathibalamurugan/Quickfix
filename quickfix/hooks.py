@@ -26,7 +26,7 @@ app_license = "mit"
 
 # include js, css files in header of desk.html
 # app_include_css = "/assets/quickfix/css/quickfix.css"
-app_include_js = "quickfix.bundle.js"
+# app_include_js = "quickfix.bundle.js"
 
 # include js, css files in header of web template
 # web_include_css = "/assets/quickfix/css/quickfix.css"
@@ -143,6 +143,9 @@ doc_events = {
 		"on_submit": "quickfix.utils.global_doc_event_handler.global_doc_event_handler",
 		"on_cancel": "quickfix.utils.global_doc_event_handler.global_doc_event_handler",
 		"on_trash": "quickfix.utils.global_doc_event_handler.global_doc_event_handler",
+	},
+	"Job Card": {
+		"on_submit": "quickfix.api.enqueue_job_submitted_webhook",
 	},
 }
 

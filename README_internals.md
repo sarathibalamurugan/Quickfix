@@ -146,3 +146,165 @@ Task C - Indexing:
   3. amended_from_index
   4. status_index
 - you would NOT add a search index to every field. because, they improve reads. but slow down writes. while updating, deleting, inserting anything everytime a tree will be created and slows down.
+
+### L1 - REST Resource API & Custom API
+Task A - Resource API (test with curl or Postman):
+- GET http://quickfix-dev.localhost:8003/api/resource/Job%20Card
+    - {
+    "session_expired": 1,
+    "data": [
+        {
+            "name": "JC-2026-00001"
+        },
+        {
+            "name": "JC-2026-00002"
+        },
+        {
+            "name": "JC-2026-00003"
+        },
+        {
+            "name": "JC-2026-00004"
+        },
+        {
+            "name": "JC-2026-00005"
+        },
+        {
+            "name": "JC-2026-00006"
+        },
+        {
+            "name": "JC-2026-00007"
+        },
+        {
+            "name": "JC-2026-00008"
+        },
+        {
+            "name": "JC-2026-00009"
+        },
+        {
+            "name": "JC-2026-00010"
+        },
+        {
+            "name": "JC-2026-00010-1"
+        },
+        {
+            "name": "JC-2026-00012"
+        },
+        {
+            "name": "JC-2026-00013"
+        },
+        {
+            "name": "JC-2026-00013-1"
+        },
+        {
+            "name": "JC-2026-00013-2"
+        },
+        {
+            "name": "JC-2026-00013-3"
+        },
+        {
+            "name": "JC-2026-00013-4"
+        },
+        {
+            "name": "JC-2026-00013-5"
+        },
+        {
+            "name": "JC-2026-00012-1"
+        },
+        {
+            "name": "JC-2026-00015"
+        }
+    ],
+    "_debug_messages": "[\"#### query\\nSELECT `user`,`sessiondata` FROM `tabSessions` WHERE `sid`='d05d24060e876a336a90a8cb1f33e2118e823efeb39433b9cee9f0b7' AND `lastupdate`>'2026-03-12 08:58:50.027459'\\n####\",\"#### query\\nSELECT `user` FROM `tabSessions` WHERE `sid`='d05d24060e876a336a90a8cb1f33e2118e823efeb39433b9cee9f0b7'\\n####\",\"#### query\\nDELETE FROM `tabSessions` WHERE `sid`='d05d24060e876a336a90a8cb1f33e2118e823efeb39433b9cee9f0b7'\\n####\",\"#### query\\ncommit and chain\\n####\",\"#### query\\nSELECT * FROM `tabDocType` WHERE `name`='Job Card' ORDER BY `creation` DESC LIMIT 1\\n####\",\"#### query\\nSELECT * FROM `tabDocField` WHERE `parent`='Job Card' AND `parenttype`='DocType' AND `parentfield`='fields' ORDER BY `idx` ASC\\n####\",\"#### query\\nSELECT * FROM `tabDocPerm` WHERE `parent`='Job Card' AND `parenttype`='DocType' AND `parentfield`='permissions' ORDER BY `idx` ASC\\n####\",\"#### query\\nSELECT * FROM `tabDocType Action` WHERE `parent`='Job Card' AND `parenttype`='DocType' AND `parentfield`='actions' ORDER BY `idx` ASC\\n####\",\"#### query\\nSELECT * FROM `tabDocType Link` WHERE `parent`='Job Card' AND `parenttype`='DocType' AND `parentfield`='links' ORDER BY `idx` ASC\\n####\",\"#### query\\nSELECT * FROM `tabDocType State` WHERE `parent`='Job Card' AND `parenttype`='DocType' AND `parentfield`='states' ORDER BY `idx` ASC\\n####\",\"#### query\\nSELECT * FROM `tabCustom Field` WHERE `dt`='Job Card' ORDER BY `idx` DESC\\n####\",\"#### query\\nSELECT * FROM `tabProperty Setter` WHERE `doc_type`='Job Card' ORDER BY `creation` DESC\\n####\",\"#### query\\nSELECT * FROM `tabCustom DocPerm` WHERE `parent`='Job Card' ORDER BY `creation` ASC\\n####\",\"#### query\\nSELECT * FROM `tabDocType Link` WHERE `parent`='Job Card' AND `custom`=1 ORDER BY `creation` DESC\\n####\",\"#### query\\nSELECT * FROM `tabDocType Action` WHERE `parent`='Job Card' AND `custom`=1 ORDER BY `creation` DESC\\n####\",\"#### query\\nSELECT * FROM `tabDocType State` WHERE `parent`='Job Card' AND `custom`=1 ORDER BY `creation` DESC\\n####\",\"#### query\\nselect table_rows from information_schema.tables where table_name = 'tabJob Card' and table_schema = '_821d9f092809d769'\\n####\",\"#### query\\nSELECT `column_name` FROM `information_schema`.`columns` WHERE `table_name`='tabJob Card'\\n####\",\"#### query\\nSELECT `name` FROM `tabDocType` WHERE `istable`=1\\n####\",\"#### query\\nSELECT `perm_type`,`doc_type` FROM `tabPermission Type` ORDER BY `perm_type` ASC\\n####\",\"#### query\\nSELECT `name` FROM `tabJob Card` LIMIT 20\\n####\",\"#### query\\nselect data from `__UserSettings`\\n\\t\\t\\twhere `user`='Guest' and `doctype`='Job Card'\\n####\"]"
+}
+- GET http://quickfix-dev.localhost:8003/api/resource/Job%20Card/JC-2026-00023
+    - {
+    "session_expired": 1,
+    "data": {
+        "name": "JC-2026-00023",
+        "owner": "Administrator",
+        "creation": "2026-03-19 11:01:05.629048",
+        "modified": "2026-03-19 11:01:18.599825",
+        "modified_by": "Administrator",
+        "docstatus": 1,
+        "idx": 0,
+        "customer_name": "asa",
+        "customer_phone": "1234567890",
+        "device_type": "Laptop",
+        "problem_description": "<div class=\"ql-editor read-mode\"><p>lkjhgfdsa</p></div>",
+        "assigned_technician": "TECH-0002",
+        "estimated_cost": 0.0,
+        "priority": "Normal",
+        "parts_total": 0.0,
+        "labour_charge": 500.0,
+        "final_amount": 500.0,
+        "payment_status": "Unpaid",
+        "status": "Ready for Delivery",
+        "doctype": "Job Card",
+        "parts_used": []
+    },
+    "_debug_messages": "[\"#### query\\nSELECT `user`,`sessiondata` FROM `tabSessions` WHERE `sid`='d05d24060e876a336a90a8cb1f33e2118e823efeb39433b9cee9f0b7' AND `lastupdate`>'2026-03-12 09:01:35.957639'\\n####\",\"#### query\\nSELECT `user` FROM `tabSessions` WHERE `sid`='d05d24060e876a336a90a8cb1f33e2118e823efeb39433b9cee9f0b7'\\n####\",\"#### query\\nDELETE FROM `tabSessions` WHERE `sid`='d05d24060e876a336a90a8cb1f33e2118e823efeb39433b9cee9f0b7'\\n####\",\"#### query\\ncommit and chain\\n####\",\"#### query\\nSELECT * FROM `tabJob Card` WHERE `name` = 'JC-2026-00023'\\n####\",\"#### query\\nSELECT * FROM `tabPart Usage Entry`\\n\\t\\t\\tWHERE `parent`= 'JC-2026-00023'\\n\\t\\t\\t\\tAND `parenttype`= 'Job Card'\\n\\t\\t\\t\\tAND `parentfield`= 'parts_used'\\n\\t\\t\\tORDER BY `idx` ASC\\n####\"]"
+}
+      - POST http://quickfix-dev.localhost:8003/api/resource/Spare%20Part
+        - {
+    "session_expired": 1,
+    "data": {
+        "name": "PART-2026-0003",
+        "owner": "Guest",
+        "creation": "2026-03-19 11:10:41.801788",
+        "modified": "2026-03-19 11:10:41.801788",
+        "modified_by": "Guest",
+        "docstatus": 0,
+        "idx": 4,
+        "part_name": "Display Laptop glass",
+        "part_code": "0011",
+        "compatible_device_type": "Laptop",
+        "unit_cost": 100.0,
+        "selling_price": 150.0,
+        "stock_qty": 995.0,
+        "reorder_level": 5.0,
+        "is_active": 1,
+        "doctype": "Spare Part"
+    },
+    "_debug_messages": "[\"#### query\\nSELECT `user`,`sessiondata` FROM `tabSessions` WHERE `sid`='d05d24060e876a336a90a8cb1f33e2118e823efeb39433b9cee9f0b7' AND `lastupdate`>'2026-03-12 09:10:41.797939'\\n####\",\"#### query\\nSELECT `user` FROM `tabSessions` WHERE `sid`='d05d24060e876a336a90a8cb1f33e2118e823efeb39433b9cee9f0b7'\\n####\",\"#### query\\nDELETE FROM `tabSessions` WHERE `sid`='d05d24060e876a336a90a8cb1f33e2118e823efeb39433b9cee9f0b7'\\n####\",\"#### query\\ncommit and chain\\n####\",\"#### query\\nSELECT `defkey`,`defvalue` FROM `tabDefaultValue` WHERE `parent`='Guest' ORDER BY `creation`\\n####\",\"#### query\\nSELECT `name` FROM `tabDevice Type` WHERE `name`='Laptop' LIMIT 1\\n####\",\"#### query\\nSELECT `name`,`event`,`method` FROM `tabNotification` WHERE `enabled`=1 AND `document_type`='Spare Part' ORDER BY `creation` DESC\\n####\",\"#### query\\nSELECT `name` FROM `tabDocument Naming Rule` WHERE `document_type`='Spare Part' AND `disabled`=0 ORDER BY `priority` DESC\\n####\",\"#### query\\nSELECT `current` FROM `tabSeries` WHERE `name`='PART-2026-' FOR UPDATE\\n####\",\"#### query\\nUPDATE `tabSeries` SET `current` = `current` + 1 WHERE `name`='PART-2026-'\\n####\",\"#### query\\nSELECT `name` FROM `tabWorkflow` WHERE `document_type`='Spare Part' AND `is_active`=1 ORDER BY `creation` DESC LIMIT 1\\n####\",\"#### query\\nINSERT INTO `tabSpare Part` (`name`, `owner`, `creation`, `modified`, `modified_by`, `docstatus`, `idx`, `part_name`, `part_code`, `compatible_device_type`, `unit_cost`, `selling_price`, `stock_qty`, `reorder_level`, `is_active`)\\n\\t\\t\\t\\t\\tVALUES ('PART-2026-0003', 'Guest', '2026-03-19 11:10:41.801788', '2026-03-19 11:10:41.801788', 'Guest', '0', 4, 'Display Laptop glass', '0011', 'Laptop', 100.0e0, 150.0e0, 995.0e0, 5.0e0, 1)\\n####\",\"#### query\\nSELECT `name` FROM `tabNotification Settings` WHERE `name`='Guest' LIMIT 1\\n####\",\"#### query\\nSELECT `module`,`custom`,`is_tree` FROM `tabDocType` WHERE `name`='Notification Settings' ORDER BY `creation` DESC LIMIT 1\\n####\",\"#### query\\nSELECT * FROM `tabNotification Settings` WHERE `name` = 'Guest'\\n####\",\"#### query\\nSELECT * FROM `tabNotification Subscribed Document`\\n\\t\\t\\tWHERE `parent`= 'Guest'\\n\\t\\t\\t\\tAND `parenttype`= 'Notification Settings'\\n\\t\\t\\t\\tAND `parentfield`= 'subscribed_documents'\\n\\t\\t\\tORDER BY `idx` ASC\\n####\",\"#### query\\nSELECT `name` FROM `tabAssignment Rule` WHERE `document_type`='Spare Part' AND `disabled`=0 ORDER BY `priority` DESC\\n####\",\"#### query\\nSELECT `name` FROM `tabAssignment Rule` WHERE `due_date_based_on`<>'' AND `document_type`='Spare Part' AND `disabled`=0\\n####\",\"#### query\\nSELECT `name` FROM `tabDocType` WHERE `name`='Spare Part' LIMIT 1\\n####\",\"#### query\\nSELECT `name` FROM `tabUser` WHERE `name`='Guest' LIMIT 1\\n####\",\"#### query\\nINSERT INTO `tabAudit Log` (`name`, `owner`, `creation`, `modified`, `modified_by`, `docstatus`, `idx`, `doctype_name`, `document_name`, `action`, `user`, `timestamp`)\\n\\t\\t\\t\\t\\tVALUES ('us297iu53v', 'Guest', '2026-03-19 11:10:41.812430', '2026-03-19 11:10:41.812430', 'Guest', '0', 0, 'Spare Part', 'PART-2026-0003', 'on_update', 'Guest', '2026-03-19 11:10:41.812167')\\n####\",\"#### query\\nSELECT `name` FROM `tabMilestone Tracker` WHERE `document_type`='Spare Part' AND `disabled`=0\\n####\"]"
+}
+- PUT http://quickfix-dev.localhost:8003/api/resource/Spare%20Part/PART-2026-0002
+    - {
+    "session_expired": 1,
+    "data": {
+        "name": "PART-2026-0002",
+        "owner": "Administrator",
+        "creation": "2026-03-03 15:18:25.607487",
+        "modified": "2026-03-19 11:47:28.489797",
+        "modified_by": "Guest",
+        "docstatus": 0,
+        "idx": 4,
+        "part_name": "Display Mobile",
+        "part_code": "00111",
+        "compatible_device_type": "Smartphone",
+        "unit_cost": 100.0,
+        "selling_price": 150.0,
+        "stock_qty": 995.0,
+        "reorder_level": 5.0,
+        "is_active": 1,
+        "doctype": "Spare Part"
+    },
+    "_debug_messages": "[\"#### query\\nSELECT `user`,`sessiondata` FROM `tabSessions` WHERE `sid`='d05d24060e876a336a90a8cb1f33e2118e823efeb39433b9cee9f0b7' AND `lastupdate`>'2026-03-12 09:47:28.485331'\\n####\",\"#### query\\nSELECT `user` FROM `tabSessions` WHERE `sid`='d05d24060e876a336a90a8cb1f33e2118e823efeb39433b9cee9f0b7'\\n####\",\"#### query\\nDELETE FROM `tabSessions` WHERE `sid`='d05d24060e876a336a90a8cb1f33e2118e823efeb39433b9cee9f0b7'\\n####\",\"#### query\\ncommit and chain\\n####\",\"#### query\\nSELECT * FROM `tabSpare Part` WHERE `name` = 'PART-2026-0002' FOR UPDATE\\n####\",\"#### query\\nSELECT * FROM `tabSpare Part` WHERE `name` = 'PART-2026-0002' FOR UPDATE\\n####\",\"#### query\\nSELECT `name` FROM `tabDevice Type` WHERE `name`='Smartphone' LIMIT 1\\n####\",\"#### query\\nUPDATE `tabSpare Part`\\n\\t\\t\\t\\tSET `owner`='Administrator', `creation`='2026-03-03 15:18:25.607487', `modified`='2026-03-19 11:47:28.489797', `modified_by`='Guest', `docstatus`='0', `idx`=4, `part_name`='Display Mobile', `part_code`='00111', `compatible_device_type`='Smartphone', `unit_cost`=100.0e0, `selling_price`=150.0e0, `stock_qty`=995.0e0, `reorder_level`=5.0e0, `is_active`=1 WHERE `name`='PART-2026-0002'\\n####\",\"#### query\\nSELECT `name` FROM `tabDocType` WHERE `name`='Spare Part' LIMIT 1\\n####\",\"#### query\\nSELECT `name` FROM `tabUser` WHERE `name`='Guest' LIMIT 1\\n####\",\"#### query\\nINSERT INTO `tabAudit Log` (`name`, `owner`, `creation`, `modified`, `modified_by`, `docstatus`, `idx`, `doctype_name`, `document_name`, `action`, `user`, `timestamp`)\\n\\t\\t\\t\\t\\tVALUES ('kdk1inliu6', 'Guest', '2026-03-19 11:47:28.494124', '2026-03-19 11:47:28.494124', 'Guest', '0', 0, 'Spare Part', 'PART-2026-0002', 'on_update', 'Guest', '2026-03-19 11:47:28.493303')\\n####\"]"
+}
+- DELETE http://quickfix-dev.localhost:8003/api/resource/Spare%20Part/PART-2026-0003
+    - {
+    "session_expired": 1,
+    "data": "ok",
+    "_debug_messages": "[\"#### query\\nSELECT....
+    }
+
+Task B - Token Authentication (API key + secret):
+- Session cookie Auth - server create a session for the user. user have to login via method. browser stores SID cokies and uses CSRF protection for every request. best for UI based uses.
+- Token Auth - no session is stored and no login endpoint needed. only api key and secret key is used for every request. no cookies and csrf used. best for server-to-server communication. 
+
+Task D - Rate limiting & abuse protection:
+- allow_guest=True endpoint leads to get attacks by unknown attackers. attacks like Enumeration attacks, DoS Attacks and Data scraping.
+
+### L2 - Webhooks: Outgoing & Incoming
+Task B - Incoming Webhook Endpoint:
+- == searches in expected time interval, so attackers can analyze the time duration and can find the correct hmac. to overcome this hmac.compare_digest is used . it uses constant time interval where attacker cant guess the timing.
+- If a duplicate payment is sent the audit log is checked for duplication . if duplicate found logic stops.

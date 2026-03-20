@@ -70,7 +70,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-04 11:39:11.384066",
+ "modified": "2026-03-18 18:08:43.302737",
  "modified_by": "Administrator",
  "module": "Service Center",
  "name": "Spare Part",
@@ -116,6 +116,18 @@
    "read": 1,
    "report": 1,
    "role": "QF Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Guest",
    "share": 1,
    "write": 1
   }

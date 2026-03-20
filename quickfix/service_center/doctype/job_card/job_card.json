@@ -107,7 +107,6 @@
    "label": "Assigned Technician",
    "options": "Technician",
    "search_index": 1
-
   },
   {
    "depends_on": "eval:doc.assigned_technician",
@@ -207,7 +206,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-17 13:05:16.933872",
+ "modified": "2026-03-19 16:31:37.757104",
  "modified_by": "Administrator",
  "module": "Service Center",
  "name": "Job Card",
