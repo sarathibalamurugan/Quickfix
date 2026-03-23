@@ -322,3 +322,37 @@ Task B - Incoming Webhook Endpoint:
  b'_821d9f092809d769|lang_user_translations']
 - frappe.clear_cache() - the browser will reload everything. because all metadata, caches were cleared.
 
+Task - B 
+- without cache invalidation the data is not updated. but with it, the data are updated after an update on job card.
+
+### M3 - Logging, Error Handling & Observability
+Task C - Production debugging pattern:
+- in production site the errors occured are stored in error log we can traceback it or using frappe.logger the errors are logged in the sitelogs.and also the audit  contains the timestamp of the event triggers. we can debug using all of these.
+
+### N1 - Security Audit
+Task A - SQL injection prevention (complete audit)
+-  frappe.db.escape() exists but parameterized queries are always preferred becuase of manual escape. the parameterized queries are safer than that.
+
+Task C - ignore_permissions analysis:
+- ignore_permissions=True
+    - in afeter install becuase of initial setup of quickfix setting.
+    - Then to create service invoice to customer in on_submit Job card.
+    - Then for daily low stock check to audit log.
+    - Then in global doc events, login and logout for Audit log.
+- if a malicious intern set ignore_permissions=True on a @whitelist(allow_guest=True) endpoint. Which means every data from the app and database is open for everyone . they can insert new docs without login or any permissions, can delete even every data. and can do whatever the admin can do.
+
+Task D - Private vs public files:
+- /files/filename.pdf is not accessible. its stored in via /private/files/filename.pdf.
+- to access it via /private/files/filename.pdf user must logged in and have proper permissions for the file.
+- use private files when using service invoices, customer details and any reports. for public, product images, logos, any non-sensitive informations.
+
+Task E - Secrets management:
+- API key hardcoded in Python source code is like showing the secrets to anyone who can access the code.
+- using the API key in common site conf can lead to expose it to all sites. can be accessible from other site.
+- committing site_config.json to git is more risky that you are giving the keys openly to everyone who have access to your git repo.
+
+### N2 - Website, Portal & Notifications 
+Notifications:
+- when an email fails to send we can check the error log where the error is occurs. or we can check on email queue when the email is queued but not sent due to other reasons.
+
+

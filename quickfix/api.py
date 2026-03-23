@@ -87,6 +87,8 @@ def get_job_by_phone():
 	if not phone:
 		frappe.response["http_status_code"] = 400
 		return {"error": "Phone required"}
+	if not (phone.isdigit() and len(phone) == 10):
+		frappe.throw("Invalid Phone")
 
 	job = frappe.db.get_value(
 		"Job Card", {"customer_phone": phone}, ["name", "status", "delivery_date"], as_dict=True
@@ -187,3 +189,30 @@ def payment_webhook():
 	# 6. Log to Audit Log
 	frappe.db.commit()
 	return {"status": "ok"}
+
+
+@frappe.whitelist()
+def get_status_chart_data():
+	cache_key = "quickfix:status_chart"
+
+	data = frappe.cache.get_value(cache_key)
+
+	if not data:
+		data = frappe.db.sql(
+			"""
+            SELECT status, COUNT(*) AS count
+            FROM `tabJob Card`
+            GROUP BY status
+        """,
+			as_dict=True,
+		)
+	frappe.cache.set_value(cache_key, data, expires_in_sec=300)
+	return data
+
+
+def clear_status_chart_cache(doc, method=None):
+	frappe.cache.delete_value("quickfix:status_chart")
+
+
+def failing_rq():
+	1 / 0

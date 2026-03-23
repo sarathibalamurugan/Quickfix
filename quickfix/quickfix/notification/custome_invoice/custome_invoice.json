@@ -1,0 +1,32 @@
+{
+ "attach_files": "",
+ "attach_print": 0,
+ "channel": "Email",
+ "condition": "doc.status==\"Ready For delivery\"",
+ "condition_type": "Python",
+ "creation": "2026-03-23 13:49:33.872345",
+ "days_in_advance": 0,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "Job Card",
+ "enabled": 1,
+ "event": "Submit",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "<p>Your product {{doc.name}} {{doc.device_type}} is ready</p>\n",
+ "message_type": "Markdown",
+ "minutes_offset": 0,
+ "modified": "2026-03-23 13:50:32.933242",
+ "modified_by": "Administrator",
+ "module": "Quickfix",
+ "name": "Custome Invoice",
+ "owner": "Administrator",
+ "recipients": [
+  {}
+ ],
+ "send_system_notification": 0,
+ "send_to_all_assignees": 0,
+ "sender": "Support",
+ "sender_email": "sarathigreen4@gmail.com",
+ "subject": "Your product is ready"
+}

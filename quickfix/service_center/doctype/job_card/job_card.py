@@ -179,10 +179,15 @@ def get_permission_query_conditions(user=None):
 
 def send_job_ready_email(job_card):
 	job_card = frappe.get_doc("Job Card", job_card)
+	attachments = [
+		frappe.attach_print(
+			job_card.doctype, job_card.name, file_name=job_card.name, print_format="Job Card Receipt"
+		)
+	]
 	frappe.sendmail(
 		recipients=job_card.customer_email,
 		subject=f"Your device is ready for delivery - Job Card {job_card.name}",
-		message=f"Dear {job_card.customer_name},<br><br>Your device with Job Card {job_card.name} is ready for delivery.<br><br>Thank you<br><br>Best regards,<br>QuickFix Team",
+		attachments=attachments,
 		now=True,
 	)
 

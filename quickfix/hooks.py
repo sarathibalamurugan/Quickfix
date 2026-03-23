@@ -146,6 +146,7 @@ doc_events = {
 	},
 	"Job Card": {
 		"on_submit": "quickfix.api.enqueue_job_submitted_webhook",
+		"on_update": "quickfix.api.clear_status_chart_cache",
 	},
 }
 
@@ -278,3 +279,5 @@ website_route_rules = [{"from_route": "/track-job", "to_route": "track-job"}]
 portal_menu_items = [
 	{"title": "Track My Job", "route": "/track-job", "reference_doctype": "Job Card", "role": "Guest"}
 ]
+
+portal_menu_items = [{"title": "Track Job", "route": "/track-job", "role": "Guest"}]
