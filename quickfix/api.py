@@ -5,11 +5,24 @@ import time
 
 import frappe
 import requests
-from frappe.utils import now_datetime, today
+from frappe.query_builder import DocType
+from frappe.utils import add_to_date, now, now_datetime, today
 
 
 def only_if_manager():
 	frappe.only_for("QF Manager")
+
+
+def get_overdue_jobs():
+	JC = DocType("Job Card")
+	result = (
+		frappe.qb.from_(JC)
+		.select(JC.name, JC.customer_name, JC.assigned_technician, JC.creation)
+		.where(
+			(JC.status.isin(["Pending Diagnosis", "In Repair"])) & (JC.creation < add_to_date(now(), days=-7))
+		)
+	).run(as_dict=True)
+	return result
 
 
 @frappe.whitelist()
