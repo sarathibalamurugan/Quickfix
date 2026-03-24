@@ -274,10 +274,6 @@ extend_bootinfo = "quickfix.boot.extend_bootinfo"
 on_session_creation = "quickfix.utils.global_doc_event_handler.log_login"
 on_logout = "quickfix.utils.global_doc_event_handler.log_logout"
 
-website_route_rules = [{"from_route": "/track-job", "to_route": "track-job"}]
-
 portal_menu_items = [
 	{"title": "Track My Job", "route": "/track-job", "reference_doctype": "Job Card", "role": "Guest"}
 ]
-
-portal_menu_items = [{"title": "Track Job", "route": "/track-job", "role": "Guest"}]

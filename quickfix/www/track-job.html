@@ -1,0 +1,17 @@
+<h2>{{ title }}</h2>
+
+<form method="get">
+    <input type="text" name="job_id" placeholder="Enter Job Card ID">
+    <button type="submit">Search</button>
+</form>
+
+<hr>
+
+{% if error %}
+    <p style="color:red;">{{ error }}</p>
+{% endif %}
+
+{% if data %}
+    <h3>Job Details</h3>
+    <p><b>Status:</b> {{ data.status }}</p>
+{% endif %}
