@@ -129,5 +129,84 @@ class IntegrationTestJobCard(IntegrationTestSparePart):
 		doc.save()
 		with self.assertRaises(frappe.ValidationError):
 			doc.submit()
-		print(doc.status)
 		self.assertEqual(doc.docstatus, 1)
+
+	def test_stock_check_on_submit(self):
+		spare = self.create_spare_part()
+		job = self.create_job_card(spare_part=spare)
+		doc = frappe.get_doc("Job Card", job)
+		doc.status = "Ready for Delivery"
+		with self.assertRaises(frappe.ValidationError) as context:
+			doc.save()
+			doc.submit()
+		for part in doc.parts_used:
+			spare = frappe.get_doc("Spare Part", part.part)
+			spare.stock_qty = part.quantity
+			spare.save()
+		self.assertIn(spare.part_name.lower(), str(context.exception).lower())
+		doc = frappe.get_doc("Job Card", job)
+		doc.status = "Ready for Delivery"
+		doc.save()
+		doc.submit()
+		self.assertEqual(doc.docstatus, 1)
+
+	def test_deduct_stock_on_submit(self):
+		spare = self.create_spare_part()
+		job = self.create_job_card(spare_part=spare)
+		doc = frappe.get_doc("Job Card", job)
+		doc.status = "Ready for Delivery"
+		doc.save()
+		old_spare_qty = {}
+		for part in doc.parts_used:
+			spare = frappe.get_doc("Spare Part", part.part)
+			spare.stock_qty = part.quantity
+			spare.save()
+			old_spare_qty[part.part] = (
+				frappe.db.get_value("Spare Part", part.part, "stock_qty") - part.quantity
+			)
+		doc.submit()
+		for part in doc.parts_used:
+			self.assertEqual(
+				old_spare_qty[part.part], frappe.db.get_value("Spare Part", part.part, "stock_qty")
+			)
+
+	def test_service_invoice_creation(self):
+		job = self.create_job_card()
+		doc = frappe.get_doc("Job Card", job)
+		doc.status = "Ready for Delivery"
+		doc.save()
+		doc.submit()
+		invoice = frappe.db.exists("Service Invoice", {"job_card": doc.name})
+		self.assertTrue(invoice)
+		invoice_job_name = frappe.db.get_value("Service Invoice", invoice, "job_card")
+		self.assertEqual(invoice_job_name, doc.name)
+
+	def test_stock_on_cancel(self):
+		spare = self.create_spare_part()
+		job = self.create_job_card(spare_part=spare)
+		doc = frappe.get_doc("Job Card", job)
+		doc.status = "Ready for Delivery"
+		doc.save()
+
+		spare_qty = {}
+		for part in doc.parts_used:
+			spare = frappe.get_doc("Spare Part", part.part)
+			spare.stock_qty = part.quantity
+			spare.save()
+			spare_qty[part.part] = frappe.db.get_value("Spare Part", part.part, "stock_qty")
+		doc.submit()
+		doc.cancel()
+		for part in doc.parts_used:
+			spare_cur = frappe.db.get_value("Spare Part", part.part, "stock_qty")
+			self.assertEqual(spare_qty[part.part], spare_cur)
+
+	def test_cancel_linked_invoice(self):
+		job = self.create_job_card()
+		doc = frappe.get_doc("Job Card", job)
+		doc.status = "Ready for Delivery"
+		doc.save()
+		doc.submit()
+		invoice = frappe.db.exists("Service Invoice", {"job_card": doc.name})
+		doc.cancel()
+		invoice_docstatus = frappe.db.get_value("Service Invoice", invoice, "docstatus")
+		self.assertEqual(invoice_docstatus, 2)

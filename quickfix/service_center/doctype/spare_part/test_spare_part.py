@@ -27,4 +27,5 @@ class IntegrationTestSparePart(IntegrationTestCase):
 				"selling_price": 150,
 			}
 		).insert(ignore_permissions=True)
+		frappe.db.commit()
 		return doc.name

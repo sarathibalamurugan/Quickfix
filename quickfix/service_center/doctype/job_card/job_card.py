@@ -67,7 +67,7 @@ class JobCard(Document):
 		for part in self.parts_used:
 			part_qty = frappe.get_value("Spare Part", part.part, "stock_qty")
 			if part.quantity > part_qty:
-				msg += f"Not enough stock for Spare Part {part.part}. Available: {part_qty}. \n "
+				msg += f"Not enough stock for Spare Part {part.part_name}. Available: {part_qty}. \n "
 
 		if msg:
 			frappe.throw(_(msg))
@@ -112,11 +112,9 @@ class JobCard(Document):
 				"stock_qty",
 				frappe.get_value("Spare Part", part.part, "stock_qty") + part.quantity,
 			)
-		doc = frappe.get_doc("Service Invoice", ({"job_card": self.name}))
-		if doc.docstatus == 1:
-			doc.cancel()
-		elif doc.docstatus == 0:
-			doc.delete()
+		doc = frappe.db.exists("Service Invoice", {"job_card": self.name})
+		frappe.db.set_value("Service Invoice", doc, "docstatus", 2)
+
 		frappe.db.set_value("Job Card", self.name, "status", "Cancelled")
 
 	def on_trash(self):
