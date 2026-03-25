@@ -145,7 +145,10 @@ class JobCard(Document):
 		for part in self.parts_used:
 			part.total_price = part.quantity * part.unit_price
 			self.parts_total += part.total_price
-		self.final_amount = self.parts_total + self.labour_charge
+		if self.labour_charge:
+			self.final_amount = self.parts_total + self.labour_charge
+		else:
+			self.final_amount = self.parts_total
 
 	def before_print(self, settings=None):
 		self.print_summary = f"{self.customer_name} - {self.device_type} {self.device_brand}"

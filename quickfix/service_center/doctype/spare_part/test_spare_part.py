@@ -1,7 +1,7 @@
 # Copyright (c) 2026, Parthsarathi and Contributors
 # See license.txt
 
-# import frappe
+import frappe
 from frappe.tests import IntegrationTestCase
 
 # On IntegrationTestCase, the doctype test records and all
@@ -17,4 +17,14 @@ class IntegrationTestSparePart(IntegrationTestCase):
 	Use this class for testing interactions between multiple components.
 	"""
 
-	pass
+	def create_spare_part(self):
+		doc = frappe.get_doc(
+			{
+				"doctype": "Spare Part",
+				"part_name": "Test Part",
+				"part_code": "test0001",
+				"unit_cost": 100,
+				"selling_price": 150,
+			}
+		).insert(ignore_permissions=True)
+		return doc.name

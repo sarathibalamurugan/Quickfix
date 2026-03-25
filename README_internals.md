@@ -326,6 +326,9 @@ Task - B
 - without cache invalidation the data is not updated. but with it, the data are updated after an update on job card.
 
 ### M3 - Logging, Error Handling & Observability
+Task B - Error snapshots.
+- Error log contains title of the error, error, and metadata of the error.
+
 Task C - Production debugging pattern:
 - in production site the errors occured are stored in error log we can traceback it or using frappe.logger the errors are logged in the sitelogs.and also the audit  contains the timestamp of the event triggers. we can debug using all of these.
 
