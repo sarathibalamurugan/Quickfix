@@ -22,7 +22,7 @@ class IntegrationTestSparePart(IntegrationTestCase):
 			{
 				"doctype": "Spare Part",
 				"part_name": "Test Part",
-				"part_code": "test0001",
+				"part_code": f"TEST-{frappe.generate_hash(length=5)}",
 				"unit_cost": 100,
 				"selling_price": 150,
 			}

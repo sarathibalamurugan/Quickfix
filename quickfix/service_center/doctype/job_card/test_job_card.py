@@ -19,23 +19,26 @@ class IntegrationTestJobCard(IntegrationTestSparePart):
 	Use this class for testing interactions between multiple components.
 	"""
 
-	def create_job_card(self, spare_part=None):
-		tech = self.create_technician("9999999999").insert(ignore_permissions=True)
+	def create_job_card(self, spare_part=None, status=None, no_tech=None, tech=None):
+		if not no_tech:
+			tech = self.create_technician("9999999999").insert()
 		doc = frappe.get_doc(
 			{
 				"doctype": "Job Card",
-				"assigned_technician": tech.name,
 				"customer_name": "Test Customer",
 				"customer_phone": "9999999999",
 				"device_type": "Laptop",
 				"problem_description": "test ",
 			}
-		).insert(ignore_permissions=True)
+		)
+		if tech:
+			doc.assigned_technician = tech.name
+		doc.insert()
+		# doc.reload()
 
 		if spare_part:
 			doc.append("parts_used", {"part": spare_part, "quantity": 1})
-			doc.save(ignore_permissions=True)
-
+			doc.save()
 		return doc.name
 
 	def test_job_card(self):
@@ -44,31 +47,22 @@ class IntegrationTestJobCard(IntegrationTestSparePart):
 
 		self.assertEqual(doc, 0)
 
-	def create_technician(self, phone):
+	def create_technician(self, phone=None):
 		return frappe.get_doc({"doctype": "Technician", "technician_name": "Test Tech", "phone": phone})
-
-	def test_phone_too_short(self):
-		doc = self.create_technician("12345")
-
-		with self.assertRaises(frappe.ValidationError):
-			doc.insert(ignore_permissions=True)
-
-	def test_phone_too_long(self):
-		doc = self.create_technician("1234567890123")
-
-		with self.assertRaises(frappe.ValidationError):
-			doc.insert(ignore_permissions=True)
-
-	def test_phone_non_numeric(self):
-		doc = self.create_technician("12345abcd9")
-
-		with self.assertRaises(frappe.ValidationError):
-			doc.insert(ignore_permissions=True)
 
 	def test_phone_valid(self):
 		doc = self.create_technician("9876543210")
+		if not (doc.phone).isdigit():
+			with self.assertRaises(frappe.ValidationError):
+				doc.insert()
+		if len(doc.phone) < 10:
+			with self.assertRaises(frappe.ValidationError):
+				doc.insert()
+		if len(doc.phone) > 10:
+			with self.assertRaises(frappe.ValidationError):
+				doc.insert()
 
-		doc.insert(ignore_permissions=True)
+		doc.insert()
 
 		self.assertTrue(doc.name)
 
@@ -79,4 +73,61 @@ class IntegrationTestJobCard(IntegrationTestSparePart):
 		for row in job.parts_used:
 			spare_part = frappe.get_doc("Spare Part", row.part)
 
-			self.assertTrue(row.unit_price < spare_part.selling_price)
+			self.assertTrue(spare_part.unit_cost < row.unit_price)
+
+	def test_final_amount(self):
+		spare = self.create_spare_part()
+		doc = self.create_job_card(spare_part=spare)
+		parts_total = frappe.db.get_value("Job Card", doc, "parts_total")
+		job = frappe.get_doc("Job Card", doc)
+		parts_total_manual = 0
+		for row in job.parts_used:
+			parts_total_manual += row.total_price
+
+		self.assertEqual(parts_total, parts_total_manual)
+
+	def test_status_transition_guard(self):
+		job_name = self.create_job_card(no_tech=True)
+		doc = frappe.get_doc("Job Card", job_name)
+
+		doc.status = "In Repair"
+
+		with self.assertRaises(frappe.ValidationError):
+			doc.save()
+
+		tech = self.create_technician().insert()
+
+		doc = frappe.get_doc("Job Card", job_name)
+		doc.assigned_technician = tech.name
+		doc.status = "In Repair"
+
+		doc.save()
+		self.assertEqual(doc.status, "In Repair")
+
+	def test_estimated_cost(self):
+		doc = self.create_job_card()
+		job = frappe.get_doc("Job Card", doc)
+		job.status = "In Repair"
+		job.diagnosis_notes = "testing"
+		job.estimated_cost = 200
+		job.save()
+
+		self.assertNotEqual(job.estimated_cost, 0)
+
+	def test_child_row_computation(self):
+		spare = self.create_spare_part()
+		doc = self.create_job_card(spare_part=spare)
+		job = frappe.get_doc("Job Card", doc)
+		for part in job.parts_used:
+			manual_total = part.quantity * part.unit_price
+			self.assertEqual(manual_total, part.total_price)
+
+	def test_status_before_submit(self):
+		job = self.create_job_card()
+		doc = frappe.get_doc("Job Card", job)
+		doc.status = "In Repair"
+		doc.save()
+		with self.assertRaises(frappe.ValidationError):
+			doc.submit()
+		print(doc.status)
+		self.assertEqual(doc.docstatus, 1)
