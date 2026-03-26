@@ -8,6 +8,7 @@
   "manager_email": "sca",
   "modified": "2026-02-27 13:16:59.459757",
   "name": "QuickFix Settings",
-  "shop_name": "csdc"
+  "shop_name": "csdc",
+  "webhook_url": null
  }
 ]
