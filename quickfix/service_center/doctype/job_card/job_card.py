@@ -82,19 +82,25 @@ class JobCard(Document):
 			)
 			# frappe.db.set_value("Spare Part", part.part, "stock_qty", part_qty - part.quantity) is not triggered by the user. Its a System triggered action thats why. But I still didn't understand why we need to use Ignore permissions here. Because the frappe.db automatically update in DB by bypassing permissions. And I cant use Ignore Permissions on set_value in this version of frappe.
 
-		frappe.get_doc(
-			{
-				"doctype": "Service Invoice",
-				"job_card": self.name,
-				"labour_charge": self.labour_charge,
-				"parts_total": self.parts_total,
-				"total_amount": self.final_amount,
-			}
-		).insert(ignore_permissions=True)
+		invoice_exist = frappe.db.exists("Service Invoice", {"job_card": self.name})
+		if not invoice_exist:
+			frappe.get_doc(
+				{
+					"doctype": "Service Invoice",
+					"job_card": self.name,
+					"labour_charge": self.labour_charge,
+					"parts_total": self.parts_total,
+					"total_amount": self.final_amount,
+				}
+			).insert(ignore_permissions=True)
 
 		frappe.publish_realtime(
 			"job_ready",
-			{"job_card": self.name, "status": self.status, "msg": "Job Card is ready for delivery"},
+			{
+				"job_card": self.name,
+				"status": self.status,
+				"msg": "Job Card " + self.name + " is ready for delivery",
+			},
 			user=self.owner,
 		)
 
@@ -102,6 +108,7 @@ class JobCard(Document):
 			"quickfix.service_center.doctype.job_card.job_card.send_job_ready_email",
 			queue="short",
 			job_card=self.name,
+			now=True,
 		)
 
 	def on_cancel(self):

@@ -1,6 +1,9 @@
 # Copyright (c) 2026, Parthsarathi and Contributors
 # See license.txt
 
+import time
+from unittest.mock import patch
+
 import frappe
 from frappe.tests import IntegrationTestCase
 
@@ -210,3 +213,80 @@ class IntegrationTestJobCard(IntegrationTestSparePart):
 		doc.cancel()
 		invoice_docstatus = frappe.db.get_value("Service Invoice", invoice, "docstatus")
 		self.assertEqual(invoice_docstatus, 2)
+
+	def test_on_trash_guard(self):
+		job = self.create_job_card()
+		doc = frappe.get_doc("Job Card", job)
+		doc.status = "Ready for Delivery"
+		doc.save()
+		doc.submit()
+		with self.assertRaises(frappe.ValidationError):
+			doc.delete()
+		doc.cancel()
+		invoice = frappe.db.exists("Service Invoice", {"job_card": doc.name})
+		frappe.delete_doc("Service Invoice", invoice)
+		doc.delete()
+		exist = frappe.db.exists("Job Card", doc.name)
+		self.assertFalse(exist)
+
+	def test_sendmail_on_submit(self):
+		job = self.create_job_card()
+		doc = frappe.get_doc("Job Card", job)
+		doc.status = "Ready for Delivery"
+		doc.customer_email = "test@gmail.com"
+		doc.save()
+		with patch("frappe.sendmail") as mock_mail:
+			doc.submit()
+			self.assertEqual(mock_mail.call_count, 1)
+
+		_args, kwargs = mock_mail.call_args
+		self.assertIn("recipients", kwargs)
+		self.assertIn(doc.customer_email, kwargs["recipients"])
+
+	def test_enqueue_on_submit(self):
+		job = self.create_job_card()
+		doc = frappe.get_doc("Job Card", job)
+		doc.status = "Ready for Delivery"
+		doc.customer_email = "testenqueue@gmail.com"
+		doc.save()
+		with patch("frappe.enqueue") as mock_queue:
+			doc.submit()
+		_args, kwargs = mock_queue.call_args
+		self.assertTrue(mock_queue.call_count)
+		self.assertEqual(kwargs["job_card_name"], doc.name)
+
+	def test_publish_realtime(self):
+		job = self.create_job_card()
+		doc = frappe.get_doc("Job Card", job)
+		doc.status = "Ready for Delivery"
+		doc.customer_email = "testpublishrealtime@gmail.com"
+		doc.save()
+		with patch("frappe.publish_realtime") as mock_realtime:
+			doc.submit()
+		job_call = next(
+			(
+				(args, kwargs)
+				for args, kwargs in mock_realtime.call_args_list
+				if args and args[0] == "job_ready"
+			),
+			None,
+		)
+
+		self.assertIsNotNone(job_call, "job_ready event not triggered")
+
+		args, _kwargs = job_call
+		event = args[0]
+		message = args[1]
+		self.assertEqual(event, "job_ready")
+		self.assertEqual(message["job_card"], doc.name)
+
+	def test_duplicate_invoice(self):
+		job = self.create_job_card()
+		doc = frappe.get_doc("Job Card", job)
+		doc.status = "Ready for Delivery"
+		doc.save()
+		doc.submit()
+		invoice1 = frappe.db.exists("Service Invoice", {"job_card": doc.name})
+		doc.on_submit()
+		invoice2 = frappe.db.exists("Service Invoice", {"job_card": doc.name})
+		self.assertEqual(invoice1, invoice2)

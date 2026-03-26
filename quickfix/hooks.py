@@ -263,7 +263,7 @@ require_type_annotated_api_methods = True
 fixtures = [
 	{"doctype": "Custom Field"},
 	{"doctype": "Property Setter"},
-	{"doctype": "Role", "filters": [["name", "in", ["QuickFix Manager"]]]},
+	{"doctype": "Role", "filters": [["name", "in", ["QF Manager", "QF Servicce Staff", "QF Technician"]]]},
 	{"doctype": "Workspace", "filters": [["module", "=", "Service Center"]]},
 	{"doctype": "Device Type", "filters": [["name", "in", ["Laptop", "Mobile", "Tablet"]]]},
 	{"doctype": "QuickFix Settings"},
